@@ -1,0 +1,11 @@
+#!/bin/sh
+
+LINTER=$(make linter | grep -c -e "(errors)")
+
+
+if [ $LINTER -ne 0 ]; then
+	echo " Ejecución de Linter con errores. Ejecutar make linter para más información."
+    echo "Commit aborted!"
+	exit 1
+fi
+exit 0
