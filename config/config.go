@@ -8,39 +8,33 @@ import (
 
 var (
 	// Public variables
-	Token     string
-	BotPrefix string
-
-	// Private variables
-	config *configStruct
+	Config *ConfigStruct
 )
 
-type configStruct struct {
+type ConfigStruct struct {
 	Token     string `json:"Token"`
 	BotPrefix string `json:"BotPrefix"`
+	Folder string `json:"Folder"`
 }
 
-func ReadConfig() error {
+func ReadConfig() (*ConfigStruct, error) {
 	fmt.Println("Reading config file...")
 
 	file, err := ioutil.ReadFile("./config.json")
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return err
+		return nil, err
 	}
 
 	fmt.Println(string(file))
 
-	err = json.Unmarshal(file, &config)
+	err = json.Unmarshal(file, &Config)
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return err
+		return nil, err
 	}
 
-	Token = config.Token
-	BotPrefix = config.BotPrefix
-
-	return nil
+	return Config, nil
 }

@@ -13,10 +13,6 @@ build:
 	go mod vendor
 	go build -mod=vendor -o $(SVC_NAME) ./cmd
 
-.PHONY: check-format
-#check-format:
-#	gofmt -l ./pkg/... ./cmd/...
-	
 .PHONY: test
 test: build
 	go test -covermode=count -v -count=1  -coverpkg=$(COVERAGE_PKG) -coverprofile=coverage.out ./pkg/...

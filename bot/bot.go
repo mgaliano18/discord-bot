@@ -6,12 +6,14 @@ import (
 	"github.com/mgaliano18/discord-bot/config"
 )
 
-var BotID string
+var config *config.ConfigStruct
 var goBot *discordgo.Session
+var MatiServer = "MatiServer"
 
-func Start() {
+func Start(configToSet config.ConfigStruct) {
+	config = configToSet
 	goBot, err := discordgo.New("Bot " + config.Token)
-
+	goBot.UserAgent = MatiServer
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -23,7 +25,7 @@ func Start() {
 		fmt.Println(err.Error())
 	}
 
-	BotID = u.ID
+	config.BotID = u.ID
 
 	goBot.AddHandler(messageHandler)
 
@@ -35,15 +37,4 @@ func Start() {
 	}
 
 	fmt.Println("Bot is running!")
-}
-
-func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
-
-	if m.Author.ID == BotID {
-		return
-	}
-
-	if m.Content == "ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "pong")
-	}
 }
