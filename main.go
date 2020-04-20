@@ -8,17 +8,22 @@ import (
 
 const Version = "0.0.1"
 
-func main(){
+func main() {
 	fmt.Println(fmt.Sprintf("Bot start - Version %s", Version))
 
-	config, err := config.ReadConfig()
+	config, err := config.ReadDiscordConfig()
 
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	bot.Start(config)
+	goBot, err := bot.Start(config)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	goBot.Init()
 
 	<-make(chan struct{})
 	return

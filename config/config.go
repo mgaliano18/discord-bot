@@ -6,35 +6,35 @@ import (
 	"io/ioutil"
 )
 
-var (
-	// Public variables
-	Config *ConfigStruct
-)
-
-type ConfigStruct struct {
-	Token     string `json:"Token"`
-	BotPrefix string `json:"BotPrefix"`
-	Folder string `json:"Folder"`
+type SpotifyConfig struct {
+	RedirectURL string `json:"RedirectURL"`
+	ClientID    string `json:"ClientID"`
+	SecretKey   string `json:"SecretKey"`
+	State       string `json:"State"`
 }
 
-func ReadConfig() (*ConfigStruct, error) {
+type DiscordConfig struct {
+	Token     string `json:"Token"`
+	BotPrefix string `json:"BotPrefix"`
+	BotID     string `json:"BotID"`
+	Folder    string `json:"Folder"`
+}
+
+func ReadDiscordConfig() (*DiscordConfig, error) {
 	fmt.Println("Reading config file...")
-
-	file, err := ioutil.ReadFile("./config.json")
-
+	file, err := ioutil.ReadFile("./discord.config.json")
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
 	}
-
 	fmt.Println(string(file))
-
-	err = json.Unmarshal(file, &Config)
-
+	var config *DiscordConfig
+	config = &DiscordConfig{}
+	err = json.Unmarshal(file, &config)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
 	}
 
-	return Config, nil
+	return config, nil
 }

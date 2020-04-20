@@ -6,35 +6,41 @@ import (
 	"github.com/mgaliano18/discord-bot/config"
 )
 
-var config *config.ConfigStruct
-var goBot *discordgo.Session
 var MatiServer = "MatiServer"
 
-func Start(configToSet config.ConfigStruct) {
-	config = configToSet
+type Bot struct {
+	configurations *config.DiscordConfig
+	goBot *discordgo.Session
+}
+
+func (b Bot) Init() {
+	b.goBot.AddHandler(b.messageHandler)
+}
+
+
+func Start(config *config.DiscordConfig) (*Bot, error){
 	goBot, err := discordgo.New("Bot " + config.Token)
 	goBot.UserAgent = MatiServer
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil, err
 	}
-
 	u, err := goBot.User("@me")
-
 	if err != nil {
 		fmt.Println(err.Error())
+		return nil, err
 	}
 
 	config.BotID = u.ID
-
-	goBot.AddHandler(messageHandler)
-
 	err = goBot.Open()
-
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil, err
 	}
+	fmt.Println("Bot is started!")
 
-	fmt.Println("Bot is running!")
+	return &Bot{
+		configurations: config,
+		goBot:          goBot,
+	}, nil
 }
